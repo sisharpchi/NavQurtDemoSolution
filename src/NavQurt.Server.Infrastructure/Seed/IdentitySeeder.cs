@@ -18,7 +18,9 @@ namespace NavQurt.Server.Infrastructure.Seed
             var userMgr = services.GetRequiredService<UserManager<AppUser>>();
             var appMgr = services.GetRequiredService<IOpenIddictApplicationManager>();
             var configuration = services.GetRequiredService<IConfiguration>();
-            var logger = services.GetRequiredService<ILogger<IdentitySeeder>>();
+
+            // Fix: Use ILogger instead of ILogger<IdentitySeeder> since IdentitySeeder is a static class
+            var logger = services.GetRequiredService<ILogger>();
 
             // Roles
             foreach (var role in new[] { "SuperAdmin", "Admin", "Customer" })
@@ -80,14 +82,14 @@ namespace NavQurt.Server.Infrastructure.Seed
                     ClientId = "qurt-super-admin",
                     DisplayName = "Qurt Super Admin Panel",
                     Permissions =
-                    {
-                        OpenIddictConstants.Permissions.Endpoints.Token,
-                        OpenIddictConstants.Permissions.GrantTypes.Password,
-                        OpenIddictConstants.Permissions.GrantTypes.RefreshToken,
-                        OpenIddictConstants.Permissions.Scopes.Profile,
-                        OpenIddictConstants.Scopes.OfflineAccess,
-                        "scp:api",
-                    }
+                        {
+                            OpenIddictConstants.Permissions.Endpoints.Token,
+                            OpenIddictConstants.Permissions.GrantTypes.Password,
+                            OpenIddictConstants.Permissions.GrantTypes.RefreshToken,
+                            OpenIddictConstants.Permissions.Scopes.Profile,
+                            OpenIddictConstants.Scopes.OfflineAccess,
+                            "scp:api",
+                        }
                 });
             }
         }
