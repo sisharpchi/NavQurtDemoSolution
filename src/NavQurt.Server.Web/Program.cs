@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using NavQurt.Server.Application.Interfaces;
+using NavQurt.Server.Application.Services;
 using NavQurt.Server.Core.Entities;
 using NavQurt.Server.Infrastructure.Data;
 using NavQurt.Server.Infrastructure.Seed;
@@ -23,6 +25,8 @@ namespace NavQurt.Server.Web
             builder.Services.AddAppOpenIddict();
             builder.Services.AddAppAuthentication();
             builder.Services.AddAppSwagger();
+            builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<IUserService, UserService>();
 
             var app = builder.Build();
 
