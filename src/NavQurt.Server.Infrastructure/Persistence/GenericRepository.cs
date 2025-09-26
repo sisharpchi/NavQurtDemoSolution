@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using NavQurt.Server.Core.Entities;
+using Microsoft.EntityFrameworkCore;
 using NavQurt.Server.Core.Persistence;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace NavQurt.Server.Infrastructure.Persistence
@@ -21,16 +21,15 @@ namespace NavQurt.Server.Infrastructure.Persistence
         public IUnitOfWork UnitOfWork { get; }
 
         public Task<int> CountAsync<TEntity>(Expression<Func<TEntity, bool>>? predicate = default)
-            where TEntity : class, IEntity<int>
+            where TEntity : class
         {
             return predicate == default ? Context.Set<TEntity>().CountAsync()
                 : Context.Set<TEntity>().CountAsync(predicate);
         }
 
         public Task<decimal> SumAsync<TEntity>(Expression<Func<TEntity, decimal>> selector, Expression<Func<TEntity, bool>>? predicate = default)
-            where TEntity : class, IEntity<int>
+            where TEntity : class
         {
-
             return predicate == default ? Context.Set<TEntity>().SumAsync(selector) :
                 Context.Set<TEntity>().Where(predicate).SumAsync(selector);
         }
@@ -43,13 +42,13 @@ namespace NavQurt.Server.Infrastructure.Persistence
         }
 
         public Task<TEntity?> GetAsync<TEntity>(Expression<Func<TEntity, bool>> predicate)
-            where TEntity : class, IEntity<int>
+            where TEntity : class
         {
             return Context.Set<TEntity>().FirstOrDefaultAsync(predicate);
         }
 
         public Task<List<TEntity>> GetListAsync<TEntity>(Expression<Func<TEntity, bool>>? predicate = default)
-            where TEntity : class, IEntity<int>
+            where TEntity : class
         {
             return predicate == default ? Context.Set<TEntity>().ToListAsync()
                 : Context.Set<TEntity>().Where(predicate).ToListAsync();
@@ -58,7 +57,7 @@ namespace NavQurt.Server.Infrastructure.Persistence
         public Task<Dictionary<TKey, TEntity>> GetDictionaryAsync<TKey, TEntity>(
             Func<TEntity, TKey> keySelector,
             Expression<Func<TEntity, bool>>? predicate = default)
-            where TEntity : class, IEntity<int>
+            where TEntity : class
             where TKey : notnull
         {
             return predicate == default ? Context.Set<TEntity>().ToDictionaryAsync(keySelector)
@@ -74,20 +73,20 @@ namespace NavQurt.Server.Infrastructure.Persistence
         }
 
         public async Task AddAsync<TEntity>(TEntity entity)
-            where TEntity : class, IEntity<int>
+            where TEntity : class
         {
             await Context.Set<TEntity>().AddAsync(entity);
         }
 
         public void Update<TEntity>(TEntity entity)
-            where TEntity : class, IEntity<int>
+            where TEntity : class
         {
             Context.Set<TEntity>().Attach(entity);
             Context.Entry(entity).State = EntityState.Modified;
         }
 
         public void Delete<TEntity>(TEntity? entity)
-            where TEntity : class, IEntity<int>
+            where TEntity : class
         {
             if (entity == null)
                 return;
