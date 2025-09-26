@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="NavQurt.Server.App.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:views="clr-namespace:NavQurt.Server.App.Views">
+
+    <ShellContent Route="signin" ContentTemplate="{DataTemplate views:SignInPage}" />
+    <ShellContent Route="signup" ContentTemplate="{DataTemplate views:SignUpPage}" />
+    <ShellContent Route="me"    ContentTemplate="{DataTemplate views:MePage}" />
+
+    <Shell.NavBarIsVisible>True</Shell.NavBarIsVisible>
+</Shell>
