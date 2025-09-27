@@ -1,63 +1,37 @@
-namespace NavQurt.Server.App.Services;
-
-public static class TokenStore
+﻿namespace NavQurt.Server.App.Services
 {
-    private const string KeyUserId = "auth.user";
-    private const string KeyUserName = "auth.userName";
-    private const string KeyAccess = "auth.access";
-    private const string KeyRefresh = "auth.refresh";
-    private const string KeyAccessExpiry = "auth.access.expiry";
-    private const string KeyRefreshExpiry = "auth.refresh.expiry";
-
-    public static async Task SaveAsync(AuthTokens tokens)
+    public static class TokenStore
     {
-        await SecureStorage.SetAsync(KeyUserId, tokens.UserId);
-        await SecureStorage.SetAsync(KeyUserName, tokens.UserName);
-        await SecureStorage.SetAsync(KeyAccess, tokens.AccessToken);
-        await SecureStorage.SetAsync(KeyRefresh, tokens.RefreshToken);
-        await SecureStorage.SetAsync(KeyAccessExpiry, tokens.AccessTokenExpiresAt.ToUnixTimeSeconds().ToString());
-        await SecureStorage.SetAsync(KeyRefreshExpiry, tokens.RefreshTokenExpiresAt.ToUnixTimeSeconds().ToString());
-    }
+        const string KeyAccess = "auth.access";
+        const string KeyRefresh = "auth.refresh";
+        const string KeyExpiry = "auth.expiry";
 
-    public static async Task<AuthTokens?> LoadAsync()
-    {
-        var userId = await SecureStorage.GetAsync(KeyUserId);
-        var userName = await SecureStorage.GetAsync(KeyUserName);
-        var access = await SecureStorage.GetAsync(KeyAccess);
-        var refresh = await SecureStorage.GetAsync(KeyRefresh);
-        var accessExpiry = await SecureStorage.GetAsync(KeyAccessExpiry);
-        var refreshExpiry = await SecureStorage.GetAsync(KeyRefreshExpiry);
-
-        if (string.IsNullOrWhiteSpace(userId) || string.IsNullOrWhiteSpace(access) ||
-            string.IsNullOrWhiteSpace(refresh) || string.IsNullOrWhiteSpace(accessExpiry) ||
-            string.IsNullOrWhiteSpace(refreshExpiry))
+        public static async Task SaveAsync(AuthTokens t)
         {
-            return null;
+            await SecureStorage.SetAsync(KeyAccess, t.AccessToken);
+            await SecureStorage.SetAsync(KeyRefresh, t.RefreshToken);
+            await SecureStorage.SetAsync(KeyExpiry, t.ExpiresAt.ToUnixTimeSeconds().ToString());
         }
 
-        if (!long.TryParse(accessExpiry, out var accessUnix) || !long.TryParse(refreshExpiry, out var refreshUnix))
+        public static async Task<AuthTokens?> LoadAsync()
         {
-            return null;
+            var at = await SecureStorage.GetAsync(KeyAccess);
+            var rt = await SecureStorage.GetAsync(KeyRefresh);
+            var ex = await SecureStorage.GetAsync(KeyExpiry);
+            if (string.IsNullOrEmpty(at) || string.IsNullOrEmpty(rt) || string.IsNullOrEmpty(ex)) return null;
+            return new AuthTokens
+            {
+                AccessToken = at,
+                RefreshToken = rt,
+                ExpiresAt = DateTimeOffset.FromUnixTimeSeconds(long.Parse(ex))
+            };
         }
 
-        return new AuthTokens
+        public static void Clear()
         {
-            UserId = userId,
-            UserName = userName ?? string.Empty,
-            AccessToken = access,
-            AccessTokenExpiresAt = DateTimeOffset.FromUnixTimeSeconds(accessUnix),
-            RefreshToken = refresh,
-            RefreshTokenExpiresAt = DateTimeOffset.FromUnixTimeSeconds(refreshUnix)
-        };
-    }
-
-    public static void Clear()
-    {
-        SecureStorage.Remove(KeyUserId);
-        SecureStorage.Remove(KeyUserName);
-        SecureStorage.Remove(KeyAccess);
-        SecureStorage.Remove(KeyRefresh);
-        SecureStorage.Remove(KeyAccessExpiry);
-        SecureStorage.Remove(KeyRefreshExpiry);
+            SecureStorage.Remove(KeyAccess);
+            SecureStorage.Remove(KeyRefresh);
+            SecureStorage.Remove(KeyExpiry);
+        }
     }
 }

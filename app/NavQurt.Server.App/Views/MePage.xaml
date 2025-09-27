@@ -1,0 +1,12 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="NavQurt.Server.App.Views.MePage"
+             Title="Me"
+             Appearing="OnAppearing">
+    <VerticalStackLayout Padding="24" Spacing="12">
+        <Label Text="Your profile (raw JSON):" FontAttributes="Bold"/>
+        <Editor Text="{Binding MeJson}" HeightRequest="300" />
+        <Label Text="{Binding Error}" TextColor="Red" />
+        <Button Text="Logout" Command="{Binding LogoutCommand}" />
+    </VerticalStackLayout>
+</ContentPage>

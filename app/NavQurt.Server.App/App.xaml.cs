@@ -1,20 +1,15 @@
-using Microsoft.Maui.Controls;
-using NavQurt.Server.App.Services;
+﻿using NavQurt.Server.App.Views;
 
-namespace NavQurt.Server.App;
-
-public partial class App : Application
+namespace NavQurt.Server.App
 {
-    public App()
+    public partial class App : Application
     {
-        InitializeComponent();
-        MainPage = new AppShell();
-
-        Dispatcher.Dispatch(async () =>
+        public App(SignInPage page)
         {
-            var tokens = await TokenStore.LoadAsync();
-            var route = tokens is null ? "//signin" : "//dashboard";
-            await Shell.Current.GoToAsync(route);
-        });
+            InitializeComponent();
+            MainPage = new AppShell();
+            // default nav
+            Shell.Current.GoToAsync("//signin");
+        }
     }
 }

@@ -1,27 +1,19 @@
-<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="NavQurt.Server.App.Views.SignUpPage"
-             Title="Create account">
+             Title="Sign up">
     <ScrollView>
         <VerticalStackLayout Padding="24" Spacing="12">
-            <Label Text="Register a new account" Style="{StaticResource Headline}" />
-            <Label Text="All fields are optional except username and password." />
-
             <Entry Placeholder="Username" Text="{Binding UserName}" />
             <Entry Placeholder="Password" IsPassword="True" Text="{Binding Password}" />
             <Entry Placeholder="First name" Text="{Binding FirstName}" />
             <Entry Placeholder="Last name" Text="{Binding LastName}" />
-            <Entry Placeholder="Email" Keyboard="Email" Text="{Binding Email}" />
-            <Entry Placeholder="Phone" Keyboard="Telephone" Text="{Binding Phone}" />
-
-            <Button Text="Sign up" Command="{Binding SignUpCommand}" />
-            <Button Text="Clear" Command="{Binding ClearCommand}" />
-            <Button Text="Back to sign in" Command="{Binding GoSignInCommand}" />
-
+            <Entry Placeholder="Email" Text="{Binding Email}" Keyboard="Email" />
+            <Entry Placeholder="Phone (+998...)" Text="{Binding Phone}" Keyboard="Telephone" />
+            <Button Text="Create" Command="{Binding SignUpCommand}" />
             <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
-            <Label Text="{Binding InfoMessage}" TextColor="Green" />
-            <Label Text="{Binding ErrorMessage}" TextColor="Red" />
+            <Label Text="{Binding Message}" TextColor="Green" />
+            <Label Text="{Binding Error}" TextColor="Red" />
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
