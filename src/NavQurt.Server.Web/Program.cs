@@ -1,14 +1,20 @@
+using System.Text;
 using Mapster;
 using MapsterMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using NavQurt.Server.Application.Interfaces;
+using NavQurt.Server.Application.Options;
 using NavQurt.Server.Application.Services;
 using NavQurt.Server.Core.Entities;
 using NavQurt.Server.Infrastructure;
+using NavQurt.Server.Web.Authorization;
 using NavQurt.Server.Web.Conventions;
 using NavQurt.Server.Web.Extensions;
+using NavQurt.Server.Web.HostedServices;
 using NavQurt.Server.Web.Mapper;
 using NavQurt.Server.Web.ParameterTransformers;
 using NavQurt.Server.Web.Services;
@@ -37,6 +43,9 @@ try
     AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 
+    builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("Jwt"));
+    builder.Services.AddSingleton<TimeProvider>(_ => TimeProvider.System);
+
     builder.Services.AddControllers(options =>
     {
         //options.InputFormatters.Insert(0, MyJPIF.GetJsonPatchInputFormatter());
@@ -44,6 +53,8 @@ try
         options.ModelMetadataDetailsProviders.Add(new SystemTextJsonValidationMetadataProvider());
         options.Conventions.Add(new WebAreaSlugifyConvention(new SlugifyParameterTransformer()));
     });
+
+    builder.Services.AddAuthorization(options => AuthorizationPolicies.RegisterPolicies(options));
 
     builder.Services.Configure<ApiBehaviorOptions>(options =>
     {
@@ -58,6 +69,7 @@ try
     });
 
     builder.Services.AddScoped<IAuthService, AuthService>();
+    builder.Services.AddScoped<IRoleService, RoleService>();
 
     builder.Services.AddAppDbContext(configuration);
 
@@ -74,6 +86,33 @@ try
     {
 
         mainDbContextOptions.UseOpenIddict<OpenIdApplication, OpenIdAuthorization, OpenIdScope, OpenIdToken, long>();
+    });
+
+    builder.Services.AddHostedService<RoleSeederHostedService>();
+
+    var jwtConfiguration = builder.Configuration.GetSection("Jwt").Get<JwtOptions>() ?? new JwtOptions();
+    if (string.IsNullOrWhiteSpace(jwtConfiguration.Key))
+    {
+        throw new InvalidOperationException("Jwt:Key must be provided in configuration.");
+    }
+
+    builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    }).AddJwtBearer(options =>
+    {
+        options.SaveToken = true;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfiguration.Key)),
+            ValidateIssuer = !string.IsNullOrWhiteSpace(jwtConfiguration.Issuer),
+            ValidateAudience = !string.IsNullOrWhiteSpace(jwtConfiguration.Audience),
+            ValidIssuer = string.IsNullOrWhiteSpace(jwtConfiguration.Issuer) ? null : jwtConfiguration.Issuer,
+            ValidAudience = string.IsNullOrWhiteSpace(jwtConfiguration.Audience) ? null : jwtConfiguration.Audience,
+            ClockSkew = TimeSpan.Zero
+        };
     });
 
     builder.Services.ConfigureApplicationCookie(options =>
@@ -96,7 +135,7 @@ try
     MappingConfig.RegisterMappings(config);
 
     // MappingConfig.RegisterMappings(config);
-    // Регистрируем сервисы Mapster с DI
+    //   Mapster  DI
 
     builder.Services.AddSingleton(config);
     builder.Services.AddScoped<IMapper, ServiceMapper>();
@@ -140,7 +179,7 @@ try
 
         //        if (!File.Exists(physicalPath))
         //        {
-        //            // Подмена пути на дефолтную картинку
+        //            //     
         //            context.Request.Path = "/img/default/no-image.png";
         //        }
         //    }
@@ -170,4 +209,8 @@ catch (Exception ex)
 {
 
     Console.WriteLine(ex.ToString());
+}
+
+public partial class Program
+{
 }

@@ -18,6 +18,12 @@ public record SignUpResponse(
 
 public record LoginRequest(string UserNameOrEmail, string Password, bool RememberMe);
 
+public record TokenPair(
+    string AccessToken,
+    DateTimeOffset AccessTokenExpiresAt,
+    string RefreshToken,
+    DateTimeOffset RefreshTokenExpiresAt);
+
 public record LoginResponse(
     string UserId,
     string UserName,
@@ -27,7 +33,8 @@ public record LoginResponse(
     bool PhoneNumberConfirmed,
     bool IsActive,
     IReadOnlyList<string> Roles,
-    bool RequiresTwoFactor);
+    bool RequiresTwoFactor,
+    TokenPair Tokens);
 
 public record ForgotPasswordRequest(string Email);
 
@@ -48,3 +55,7 @@ public record GeneratePhoneNumberTokenRequest(string UserId, string? PhoneNumber
 public record PhoneVerificationTokenResponse(string UserId, string PhoneNumber, string Token);
 
 public record VerifyPhoneNumberRequest(string UserId, string PhoneNumber, string Token);
+
+public record RefreshTokenRequest(string RefreshToken);
+
+public record LogoutRequest(string RefreshToken);
