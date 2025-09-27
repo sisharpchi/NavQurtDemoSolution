@@ -44,32 +44,6 @@ public class AuthController : ControllerBase
         return MapResult(result);
     }
 
-    [HttpPost("refresh")]
-    [AllowAnonymous]
-    public async Task<IActionResult> Refresh([FromBody] RefreshTokenRequest request, CancellationToken cancellationToken)
-    {
-        if (request is null)
-        {
-            return BadRequest(new { errors = new[] { "Request body is required." } });
-        }
-
-        var result = await _authService.RefreshTokenAsync(request, cancellationToken);
-        return MapResult(result);
-    }
-
-    [HttpPost("logout")]
-    [Authorize]
-    public async Task<IActionResult> Logout([FromBody] LogoutRequest request, CancellationToken cancellationToken)
-    {
-        if (request is null)
-        {
-            return BadRequest(new { errors = new[] { "Request body is required." } });
-        }
-
-        var result = await _authService.LogoutAsync(request, cancellationToken);
-        return MapResult(result, _ => NoContent());
-    }
-
     [HttpPost("forgot-password")]
     [AllowAnonymous]
     public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request, CancellationToken cancellationToken)
