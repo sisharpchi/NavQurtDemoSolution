@@ -1,14 +1,11 @@
-using System.Text;
 using Mapster;
 using MapsterMapper;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using NavQurt.Server.Application.Interfaces;
 using NavQurt.Server.Application.Options;
-using NavQurt.Server.Application.Services;
 using NavQurt.Server.Core.Entities;
 using NavQurt.Server.Infrastructure;
 using NavQurt.Server.Web.Authorization;
@@ -19,6 +16,7 @@ using NavQurt.Server.Web.Mapper;
 using NavQurt.Server.Web.ParameterTransformers;
 using NavQurt.Server.Web.Services;
 using Serilog;
+using System.Text;
 
 var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 try
@@ -68,9 +66,6 @@ try
 
     });
 
-    builder.Services.AddScoped<IAuthService, AuthService>();
-    builder.Services.AddScoped<IRoleService, RoleService>();
-
     builder.Services.AddAppDbContext(configuration);
 
     builder.Services.AddSwaggerDocumentation();
@@ -95,25 +90,6 @@ try
     {
         throw new InvalidOperationException("Jwt:Key must be provided in configuration.");
     }
-
-    builder.Services.AddAuthentication(options =>
-    {
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    }).AddJwtBearer(options =>
-    {
-        options.SaveToken = true;
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfiguration.Key)),
-            ValidateIssuer = !string.IsNullOrWhiteSpace(jwtConfiguration.Issuer),
-            ValidateAudience = !string.IsNullOrWhiteSpace(jwtConfiguration.Audience),
-            ValidIssuer = string.IsNullOrWhiteSpace(jwtConfiguration.Issuer) ? null : jwtConfiguration.Issuer,
-            ValidAudience = string.IsNullOrWhiteSpace(jwtConfiguration.Audience) ? null : jwtConfiguration.Audience,
-            ClockSkew = TimeSpan.Zero
-        };
-    });
 
     builder.Services.ConfigureApplicationCookie(options =>
     {
