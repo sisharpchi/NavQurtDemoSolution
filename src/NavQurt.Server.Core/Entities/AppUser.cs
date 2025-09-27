@@ -8,6 +8,7 @@ namespace NavQurt.Server.Core.Entities
         public string? LastName { get; set; }
         public bool IsActive { get; set; } = true;
         public string FullName => LastName + " " + FirstName;
+        public string? Code { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }

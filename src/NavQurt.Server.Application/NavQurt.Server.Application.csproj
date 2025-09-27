@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NavQurt.Server.Core\NavQurt.Server.Core.csproj" />
+    <ProjectReference Include="..\NavQurt.Server.Web.Shared\NavQurt.Server.Web.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>

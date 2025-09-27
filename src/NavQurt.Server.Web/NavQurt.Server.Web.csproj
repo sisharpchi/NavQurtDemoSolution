@@ -16,6 +16,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
 	  <PackageReference Include="AspNet.Security.OAuth.Validation" Version="2.0.0" />
+	  <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+	  <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.1" />
 	  <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="7.1.0" />
     <PackageReference Include="OpenIddict.AspNetCore" Version="7.1.0" />
     <PackageReference Include="Serilog" Version="4.3.0" />
@@ -28,6 +30,7 @@
   <ItemGroup>
     <ProjectReference Include="..\NavQurt.Server.Application\NavQurt.Server.Application.csproj" />
     <ProjectReference Include="..\NavQurt.Server.Infrastructure\NavQurt.Server.Infrastructure.csproj" />
+    <ProjectReference Include="..\NavQurt.Web.Contracts\NavQurt.Web.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

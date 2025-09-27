@@ -3,9 +3,6 @@ using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using NavQurt.Server.Application.Interfaces;
-using NavQurt.Server.Application.Options;
 using NavQurt.Server.Core.Entities;
 using NavQurt.Server.Infrastructure;
 using NavQurt.Server.Web.Authorization;
@@ -16,7 +13,6 @@ using NavQurt.Server.Web.Mapper;
 using NavQurt.Server.Web.ParameterTransformers;
 using NavQurt.Server.Web.Services;
 using Serilog;
-using System.Text;
 
 var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 try
@@ -41,7 +37,6 @@ try
     AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 
-    builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("Jwt"));
     builder.Services.AddSingleton<TimeProvider>(_ => TimeProvider.System);
 
     builder.Services.AddControllers(options =>
@@ -84,12 +79,6 @@ try
     });
 
     builder.Services.AddHostedService<RoleSeederHostedService>();
-
-    var jwtConfiguration = builder.Configuration.GetSection("Jwt").Get<JwtOptions>() ?? new JwtOptions();
-    if (string.IsNullOrWhiteSpace(jwtConfiguration.Key))
-    {
-        throw new InvalidOperationException("Jwt:Key must be provided in configuration.");
-    }
 
     builder.Services.ConfigureApplicationCookie(options =>
     {

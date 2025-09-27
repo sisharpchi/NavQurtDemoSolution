@@ -27,7 +27,7 @@ namespace NavQurt.Server.Infrastructure
         {
             var identityBuilder = services.AddIdentity<AppUser, AppRole>(options =>
             {
-                options.SignIn.RequireConfirmedAccount = false;
+                options.SignIn.RequireConfirmedAccount = true;
                 options.Password.RequiredLength = 4;
                 options.Password.RequireUppercase = false;
                 options.Password.RequireNonAlphanumeric = false;
