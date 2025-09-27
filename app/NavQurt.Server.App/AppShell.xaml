@@ -5,9 +5,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:views="clr-namespace:NavQurt.Server.App.Views">
 
-    <ShellContent Route="signin" ContentTemplate="{DataTemplate views:SignInPage}" />
-    <ShellContent Route="signup" ContentTemplate="{DataTemplate views:SignUpPage}" />
-    <ShellContent Route="me"    ContentTemplate="{DataTemplate views:MePage}" />
+    <ShellContent Route="signin" Title="Sign in" ContentTemplate="{DataTemplate views:SignInPage}" />
+    <ShellContent Route="signup" Title="Create account" ContentTemplate="{DataTemplate views:SignUpPage}" />
+    <ShellContent Route="dashboard" Title="Dashboard" ContentTemplate="{DataTemplate views:DashboardPage}" />
 
     <Shell.NavBarIsVisible>True</Shell.NavBarIsVisible>
 </Shell>

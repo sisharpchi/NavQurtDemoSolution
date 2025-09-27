@@ -1,9 +1,13 @@
-﻿namespace NavQurt.Server.App.Services
+namespace NavQurt.Server.App.Services;
+
+public class AuthTokens
 {
-    public class AuthTokens
-    {
-        public string AccessToken { get; set; } = "";
-        public string RefreshToken { get; set; } = "";
-        public DateTimeOffset ExpiresAt { get; set; } // access token muddati (taxminiy)
-    }
+    public string UserId { get; set; } = string.Empty;
+    public string UserName { get; set; } = string.Empty;
+    public string AccessToken { get; set; } = string.Empty;
+    public DateTimeOffset AccessTokenExpiresAt { get; set; }
+        = DateTimeOffset.UtcNow;
+    public string RefreshToken { get; set; } = string.Empty;
+    public DateTimeOffset RefreshTokenExpiresAt { get; set; }
+        = DateTimeOffset.UtcNow;
 }
