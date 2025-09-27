@@ -12,7 +12,7 @@ public record UserDto(
     bool IsActive,
     string? FullName,
     DateTime CreatedAt,
-    IReadOnlyList<string> Roles);
+    IList<string> Roles);
 
 public record UpdateUserProfileRequest(
     string? UserId,
@@ -23,6 +23,6 @@ public record UpdateUserProfileRequest(
     string? PhoneNumber,
     bool? IsActive);
 
-public record UpdateUserRolesRequest(string? UserId, IReadOnlyCollection<string> Roles);
+public record UpdateUserRolesRequest(string? UserId, IList<string> Roles);
 
 public record UpdateUserStatusRequest(string? UserId, bool IsActive);

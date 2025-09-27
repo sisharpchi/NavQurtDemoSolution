@@ -10,11 +10,12 @@ namespace NavQurt.Server.Web.Extensions
         public static IServiceCollection AddAppDbContext(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<MainDbContext>(options =>
-                options.UseNpgsql(configuration.GetConnectionString("Default"))
-            );
+            {
+                options.UseNpgsql(configuration.GetConnectionString("MainDatabase"));
+            });
 
             services.AddDbContext<AppDbContext>(options =>
-                options.UseNpgsql(configuration.GetConnectionString("Default"))
+                options.UseNpgsql(configuration.GetConnectionString("AppDatabase"))
             );
 
             return services;

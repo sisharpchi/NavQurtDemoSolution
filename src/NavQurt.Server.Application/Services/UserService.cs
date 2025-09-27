@@ -201,7 +201,7 @@ public class UserService : IUserService
         return OperationResult<bool>.Success(true);
     }
 
-    private static UserDto ToDto(AppUser user, IReadOnlyCollection<string> roles)
+    private static UserDto ToDto(AppUser user, IList<string> roles)
     {
         return new UserDto(
             user.Id,

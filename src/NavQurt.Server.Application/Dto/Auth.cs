@@ -14,7 +14,7 @@ public record SignUpResponse(
     string? Email,
     string? Phone,
     string? FullName,
-    IReadOnlyList<string> Roles);
+    IList<string> Roles);
 
 public record LoginRequest(string UserNameOrEmail, string Password, bool RememberMe);
 

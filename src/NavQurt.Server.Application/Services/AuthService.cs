@@ -114,7 +114,7 @@ public class AuthService : IAuthService
             user.EmailConfirmed,
             user.PhoneNumberConfirmed,
             user.IsActive,
-            roles,
+            roles.ToList(),
             signInResult.RequiresTwoFactor);
 
         return OperationResult<LoginResponse>.Success(response);
