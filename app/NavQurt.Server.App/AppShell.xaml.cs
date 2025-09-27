@@ -1,13 +1,14 @@
-﻿using NavQurt.Server.App.Views;
+using Microsoft.Maui.Controls;
+using NavQurt.Server.App.Views;
 
-namespace NavQurt.Server.App
+namespace NavQurt.Server.App;
+
+public partial class AppShell : Shell
 {
-    public partial class AppShell : Shell
+    public AppShell()
     {
-        public AppShell()
-        {
-            InitializeComponent();
-            Routing.RegisterRoute(nameof(SignUpPage), typeof(SignUpPage));
-        }
+        InitializeComponent();
+        Routing.RegisterRoute(nameof(SignUpPage), typeof(SignUpPage));
+        Routing.RegisterRoute(nameof(DashboardPage), typeof(DashboardPage));
     }
 }

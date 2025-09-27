@@ -63,22 +63,22 @@
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.1" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <MauiXaml Update="Views\MePage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\SignInPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\SignUpPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	</ItemGroup>
-	
-	 <ItemGroup>
+        <ItemGroup>
+          <MauiXaml Update="Views\DashboardPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+          </MauiXaml>
+          <MauiXaml Update="Views\SignInPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+          </MauiXaml>
+          <MauiXaml Update="Views\SignUpPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+          </MauiXaml>
+        </ItemGroup>
+
+         <ItemGroup>
+    <Compile Update="Views\DashboardPage.xaml.cs"><DependentUpon>DashboardPage.xaml</DependentUpon></Compile>
     <Compile Update="Views\SignInPage.xaml.cs"><DependentUpon>SignInPage.xaml</DependentUpon></Compile>
     <Compile Update="Views\SignUpPage.xaml.cs"><DependentUpon>SignUpPage.xaml</DependentUpon></Compile>
-    <Compile Update="Views\MePage.xaml.cs"><DependentUpon>MePage.xaml</DependentUpon></Compile>
   </ItemGroup>
 
 	<PropertyGroup>

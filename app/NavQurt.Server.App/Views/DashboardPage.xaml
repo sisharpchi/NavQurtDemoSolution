@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="NavQurt.Server.App.Views.DashboardPage"
+             Title="General API dashboard">
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="20">
+            <Label Text="General API dashboard" Style="{StaticResource Headline}" />
+            <Label Text="{Binding SessionSummary}" />
+
+            <HorizontalStackLayout Spacing="12">
+                <Button Text="Refresh session" Command="{Binding RefreshSessionCommand}" />
+                <Button Text="Sign out" Command="{Binding LogoutCommand}" />
+            </HorizontalStackLayout>
+
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
+            <Label Text="{Binding InfoMessage}" TextColor="Green" />
+            <Label Text="{Binding ErrorMessage}" TextColor="Red" />
+
+            <Frame>
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Users" FontAttributes="Bold" />
+                    <Button Text="Load users" Command="{Binding LoadUsersCommand}" />
+                    <CollectionView ItemsSource="{Binding Users}"
+                                    SelectionMode="Single"
+                                    SelectedItem="{Binding SelectedUser}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <VerticalStackLayout Padding="8" Spacing="2">
+                                    <Label Text="{Binding UserName}" FontAttributes="Bold" />
+                                    <Label Text="{Binding Email}" FontSize="12" />
+                                    <Label Text="{Binding Roles}" FontSize="12" />
+                                </VerticalStackLayout>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                    <Label Text="Selected user (JSON)" />
+                    <Editor Text="{Binding UserDetailsJson}" AutoSize="TextChanges" HeightRequest="160" />
+
+                    <Entry Placeholder="User ID" Text="{Binding UserIdInput}" />
+                    <Entry Placeholder="Username" Text="{Binding UserNameInput}" />
+                    <Entry Placeholder="First name" Text="{Binding FirstNameInput}" />
+                    <Entry Placeholder="Last name" Text="{Binding LastNameInput}" />
+                    <Entry Placeholder="Email" Text="{Binding EmailInput}" />
+                    <Entry Placeholder="Phone" Text="{Binding PhoneInput}" />
+                    <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
+                        <Label Text="Is active" VerticalOptions="Center" />
+                        <Switch IsToggled="{Binding UserIsActiveInput}" />
+                    </HorizontalStackLayout>
+                    <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
+                        <Label Text="Apply active flag when updating profile" VerticalOptions="Center" />
+                        <CheckBox IsChecked="{Binding ApplyUserIsActive}" />
+                    </HorizontalStackLayout>
+
+                    <HorizontalStackLayout Spacing="12">
+                        <Button Text="Fetch" Command="{Binding FetchUserCommand}" />
+                        <Button Text="Update" Command="{Binding UpdateUserCommand}" />
+                        <Button Text="Set status" Command="{Binding SetUserStatusCommand}" />
+                        <Button Text="Delete" Command="{Binding DeleteUserCommand}" />
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame>
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Roles" FontAttributes="Bold" />
+                    <Button Text="Load roles" Command="{Binding LoadRolesCommand}" />
+                    <CollectionView ItemsSource="{Binding Roles}"
+                                    SelectionMode="Single"
+                                    SelectedItem="{Binding SelectedRole}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <VerticalStackLayout Padding="8" Spacing="2">
+                                    <Label Text="{Binding Name}" FontAttributes="Bold" />
+                                    <Label Text="{Binding UserCount, StringFormat='Users: {0}'}" FontSize="12" />
+                                </VerticalStackLayout>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                    <Label Text="Selected role (JSON)" />
+                    <Editor Text="{Binding RoleDetailsJson}" AutoSize="TextChanges" HeightRequest="140" />
+
+                    <Entry Placeholder="Role ID" Text="{Binding RoleIdInput}" />
+                    <Entry Placeholder="Role name" Text="{Binding RoleNameInput}" />
+
+                    <HorizontalStackLayout Spacing="12">
+                        <Button Text="Create" Command="{Binding CreateRoleCommand}" />
+                        <Button Text="Update" Command="{Binding UpdateRoleCommand}" />
+                        <Button Text="Delete" Command="{Binding DeleteRoleCommand}" />
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame>
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Role assignment" FontAttributes="Bold" />
+                    <Entry Placeholder="User ID" Text="{Binding RoleAssignmentUserId}" />
+                    <Entry Placeholder="Roles (comma separated)" Text="{Binding RoleAssignmentRoles}" />
+                    <HorizontalStackLayout Spacing="12">
+                        <Button Text="Get roles" Command="{Binding GetUserRolesCommand}" />
+                        <Button Text="Replace" Command="{Binding UpdateUserRolesCommand}" />
+                        <Button Text="Assign" Command="{Binding AssignRolesCommand}" />
+                        <Button Text="Remove" Command="{Binding RemoveRolesCommand}" />
+                    </HorizontalStackLayout>
+                    <Editor Text="{Binding RoleAssignmentResult}" AutoSize="TextChanges" HeightRequest="120" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame>
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Security tools" FontAttributes="Bold" />
+
+                    <Label Text="Change password" FontAttributes="Bold" FontSize="14" />
+                    <Entry Placeholder="User ID" Text="{Binding ChangePasswordUserId}" />
+                    <Entry Placeholder="Current password" IsPassword="True" Text="{Binding ChangePasswordCurrent}" />
+                    <Entry Placeholder="New password" IsPassword="True" Text="{Binding ChangePasswordNew}" />
+                    <Button Text="Change password" Command="{Binding ChangePasswordCommand}" />
+
+                    <Label Text="Forgot password" FontAttributes="Bold" FontSize="14" />
+                    <Entry Placeholder="Email" Keyboard="Email" Text="{Binding ForgotPasswordEmail}" />
+                    <Button Text="Generate token" Command="{Binding ForgotPasswordCommand}" />
+                    <Entry Placeholder="Generated token" Text="{Binding GeneratedPasswordToken}" />
+
+                    <Label Text="Reset password" FontAttributes="Bold" FontSize="14" />
+                    <Entry Placeholder="User ID" Text="{Binding ResetPasswordUserId}" />
+                    <Entry Placeholder="Token" Text="{Binding ResetPasswordToken}" />
+                    <Entry Placeholder="New password" IsPassword="True" Text="{Binding ResetPasswordNew}" />
+                    <Button Text="Reset password" Command="{Binding ResetPasswordCommand}" />
+
+                    <Label Text="Email verification" FontAttributes="Bold" FontSize="14" />
+                    <Entry Placeholder="User ID" Text="{Binding EmailTokenUserId}" />
+                    <Button Text="Generate token" Command="{Binding GenerateEmailTokenCommand}" />
+                    <Entry Placeholder="Generated token" Text="{Binding GeneratedEmailToken}" />
+                    <Entry Placeholder="Token to verify" Text="{Binding EmailVerificationToken}" />
+                    <Button Text="Verify email" Command="{Binding VerifyEmailCommand}" />
+
+                    <Label Text="Phone verification" FontAttributes="Bold" FontSize="14" />
+                    <Entry Placeholder="User ID" Text="{Binding PhoneTokenUserId}" />
+                    <Entry Placeholder="Phone number" Text="{Binding PhoneTokenPhoneNumber}" />
+                    <Button Text="Generate token" Command="{Binding GeneratePhoneTokenCommand}" />
+                    <Entry Placeholder="Generated token" Text="{Binding GeneratedPhoneToken}" />
+                    <Entry Placeholder="Token to verify" Text="{Binding PhoneVerificationToken}" />
+                    <Button Text="Verify phone" Command="{Binding VerifyPhoneCommand}" />
+                </VerticalStackLayout>
+            </Frame>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
