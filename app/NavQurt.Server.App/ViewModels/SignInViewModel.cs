@@ -1,74 +1,38 @@
-using System.Threading;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.Maui.Controls;
 using NavQurt.Server.App.Services;
 using NavQurt.Server.App.Views;
+using System.Text.Json;
 
-namespace NavQurt.Server.App.ViewModels;
-
-public partial class SignInViewModel : ObservableObject
+namespace NavQurt.Server.App.ViewModels
 {
-    private readonly GeneralApi _api;
-
-    [ObservableProperty]
-    private string userNameOrEmail = string.Empty;
-
-    [ObservableProperty]
-    private string password = string.Empty;
-
-    [ObservableProperty]
-    private bool rememberMe = true;
-
-    [ObservableProperty]
-    private bool isBusy;
-
-    [ObservableProperty]
-    private string? statusMessage;
-
-    [ObservableProperty]
-    private string? errorMessage;
-
-    public SignInViewModel(GeneralApi api)
+    public partial class SignInViewModel : ObservableObject
     {
-        _api = api;
-    }
+        private readonly AuthApi _api;
 
-    [RelayCommand]
-    private async Task SignInAsync()
-    {
-        try
+        [ObservableProperty] string userName = "";
+        [ObservableProperty] string password = "";
+        [ObservableProperty] bool isBusy;
+        [ObservableProperty] string? error;
+
+        public SignInViewModel(AuthApi api) => _api = api;
+
+        [RelayCommand]
+        public async Task SignIn()
         {
-            IsBusy = true;
-            ErrorMessage = null;
-            StatusMessage = null;
-
-            var response = await _api.LoginAsync(UserNameOrEmail.Trim(), Password, RememberMe, CancellationToken.None);
-            StatusMessage = $"Welcome {response.UserName}!";
-            await Shell.Current.GoToAsync("//dashboard");
+            try
+            {
+                IsBusy = true; Error = null;
+                var tokens = await _api.SignInAsync(userName, password, CancellationToken.None);
+                if (tokens == null) { Error = "Login failed"; return; }
+                await TokenStore.SaveAsync(tokens);
+                await Shell.Current.GoToAsync("//me");
+            }
+            catch (Exception ex) { Error = ex.Message; }
+            finally { IsBusy = false; }
         }
-        catch (Exception ex)
-        {
-            ErrorMessage = ex.Message;
-        }
-        finally
-        {
-            IsBusy = false;
-        }
-    }
 
-    [RelayCommand]
-    private Task GoSignUpAsync()
-        => Shell.Current.GoToAsync("//signup");
-
-    [RelayCommand]
-    private async Task ClearAsync()
-    {
-        UserNameOrEmail = string.Empty;
-        Password = string.Empty;
-        RememberMe = true;
-        StatusMessage = null;
-        ErrorMessage = null;
-        await Task.CompletedTask;
+        [RelayCommand]
+        public async Task GoSignUp() => await Shell.Current.GoToAsync($"{nameof(SignUpPage)}");
     }
 }
